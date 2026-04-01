@@ -19,13 +19,8 @@ app.use(cors())
 app.use(express.json())
 app.use(cookieParser())
 
-app.use('/api/', router)
-
-app.use(notFoundHandler)
-
-app.use(errorHandler)
-
 if (envConfig.NODE_ENV === 'development') {
+  console.log(':::Start Docs:::')
   app.use(
     '/docs',
     swaggerUi.serve,
@@ -35,6 +30,12 @@ if (envConfig.NODE_ENV === 'development') {
     })
   )
 }
+
+app.use(router)
+
+app.use(notFoundHandler)
+
+app.use(errorHandler)
 
 const startServer = async () => {
   try {
