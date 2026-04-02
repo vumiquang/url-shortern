@@ -3,6 +3,7 @@ import { urlController } from '@/controllers'
 import { asyncHandler } from '@/utils'
 import { validate } from '@/middlewares/validate.middleware'
 import { urlShotenCreateSchema } from '@/schemas/url.schema'
+import { redirectLimiter, createLinkLimiter } from '@/middlewares/limit.middleware'
 
 const router = Router()
 /**
@@ -26,11 +27,35 @@ const router = Router()
  *                type: string
  *              urlShorten:
  *                type: string
+ *              expiredAt:
+ *                type: string
+ *                format: date-time
  *    responses:
  *      201:
- *        description: 
+ *        description:
  */
-router.post('/shorten', validate(urlShotenCreateSchema), asyncHandler(urlController.createUrlShorten))
-router.get('/:urlShorten', asyncHandler(urlController.redirectUrl))
+router.post(
+  '/shorten',
+  createLinkLimiter,
+  validate(urlShotenCreateSchema),
+  asyncHandler(urlController.createUrlShorten)
+)
+
+/**
+ * @swagger
+ * /{urlShorten}:
+ *  get:
+ *    tags: [Url]
+ *    summary: Redirect url
+ *    parameters:
+ *      - in: path
+ *        name: urlShorten
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: Origin url
+ */
+router.get('/:urlShorten', redirectLimiter, asyncHandler(urlController.redirectUrl))
 
 export default router

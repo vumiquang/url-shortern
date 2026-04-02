@@ -19,7 +19,7 @@ export const notFoundHandler = (req: Request, res: Response, next: NextFunction)
 }
 
 export const errorHandler = (error: Error, req: Request, res: Response, _next: NextFunction): void => {
-  // console.log(':::Error:::', error)
+  console.log(':::Error:::', error)
   if (error instanceof AppError) {
     const errorResponse: ErrorResponse = {
       success: false,

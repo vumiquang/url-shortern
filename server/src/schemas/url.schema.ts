@@ -9,7 +9,8 @@ export const urlShotenCreateSchema = z.object({
       .max(100, 'Url shorten length is a maximum of 100 characters')
       .regex(/^[a-zA-Z0-9_-]+$/, {
         message: 'Short code must be alphanumeric, _ or -'
-      })
+      }),
+    expiredAt: z.iso.datetime().optional().nullable()
   })
 })
 
